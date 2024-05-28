@@ -3,15 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>React Router Example</title>
 
+    <!-- React and ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- React Router DOM -->
+    <script src="https://unpkg.com/react-router-dom@6.14.1/umd/react-router-dom.development.js" crossorigin></script>
+
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
 
-    <script type="text/babel" src="index.js"></script>
+    <script type="text/babel">
+        const { BrowserRouter, Routes, Route, Outlet } = ReactRouterDOM;
+        const { createRoot } = ReactDOM;
+        const { useState } = React;
+
+        function Layout() {
+            return (
+                <div>
+                    <h1>Layout</h1>
+                    <Outlet />
+                </div>
+            );
+        }
+
+        function Home() {
+            return <h2>Home</h2>;
+        }
+
+        function Blogs() {
+            return <h2>Blogs</h2>;
+        }
+
+        function Contact() {
+            return <h2>Contact</h2>;
+        }
+
+        function NoPage() {
+            return <h2>404 Not Found</h2>;
+        }
+
+        function App() {
+            return (
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Layout />}>
+                            <Route index element={<Home />} />
+                            <Route path="blogs" element={<Blogs />} />
+                            <Route path="contact" element={<Contact />} />
+                            <Route path="*" element={<NoPage />} />
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+            );
+        }
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
-</html></i>
+</html>
