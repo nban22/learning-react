@@ -25,36 +25,19 @@ import { useEffect, useState } from "react";
 // 2) Cleanuo function luôn được gọi trước khi component unmounted
 
 const Content = () => {
-    const [dimensions, setDimensions] = useState({
-        'width': window.innerWidth,
-        'height': window.innerHeight,
-        'outerWidth': window.outerWidth,
-        'outerHeight': window.outerHeight,
-    });
-    // const [width, setWidth] = useState(window.innerWidth);
-
-    
+    const [countDown, setCountDown] = useState(800);
+    let timer;
     useEffect(() => {
-        const handleResize = () => {
-            setDimensions((pre) => ({...pre, 'width':window.innerWidth}))
-            setDimensions((pre) => ({...pre, 'height':window.innerHeight}))
-            setDimensions((pre) => ({...pre, 'outerWidth':window.outerWidth}))
-            setDimensions((pre) => ({...pre, 'outerHeight':window.outerHeight}))
-            
-            
-        }
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
+
+        const timer = setInterval(()=>{
+            setCountDown(pre => pre - 1);
+        }, 1000);
+        return () => clearInterval(timer)
     }, [])
     return (
         <div>
-            <h1>The size of window</h1>
-            <h3>innerWidth: {dimensions.width}</h3>
-            <h3>innerHeight: {dimensions.height}</h3>
-            <h3>outerWidth: {dimensions.outerWidth}</h3>
-            <h3>outerHeight: {dimensions.outerHeight}</h3>
+            <h1>countDown Time</h1>
+            <h2>{countDown}</h2>
         </div>
     );
 };
