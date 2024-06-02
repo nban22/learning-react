@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Content from './Content'
 
 const courses = [
   {
@@ -24,7 +25,23 @@ const cssCenterTag = {
   height: '100vh'
 }
 
-function App() {
+
+
+const App = () => {
+  const [isShow, setIsShow] = useState(false);
+  return (
+    <div>
+      <button
+        onClick={()=>{
+          setIsShow(!isShow);
+        }}
+      >Toggle</button>
+      {isShow && <Content/>}
+    </div>
+  );
+};
+
+function AppUseState() {
   const [item, setItem] = useState("");
   const [listItem, setListItem] = useState(JSON.parse(localStorage.getItem('item')) ?? []);
   const handleSubmit = () => {
