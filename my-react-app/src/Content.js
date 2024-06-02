@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
  *      -remove listener / Unsubscribe
  *      -clear timer
  */
-const tabs = ['posts', 'comments', 'albums', 'photos']
 
 // UseEffect(callback)
 // - Gọi Callback mỗi khi component re-render
@@ -26,74 +25,36 @@ const tabs = ['posts', 'comments', 'albums', 'photos']
 // 2) Cleanuo function luôn được gọi trước khi component unmounted
 
 const Content = () => {
-    const [title, setTitle] = useState("");
-    const [posts, setPosts] = useState([]);
-    const [type, setType] = useState(tabs[0]);
-    const [showGoToTop, setShowGoToTop] = useState(false);
+    const [dimensions, setDimensions] = useState({
+        'width': window.innerWidth,
+        'height': window.innerHeight,
+        'outerWidth': window.outerWidth,
+        'outerHeight': window.outerHeight,
+    });
+    // const [width, setWidth] = useState(window.innerWidth);
 
+    
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/' + type)
-            .then((res) => res.json())
-            .then(posts => {
-                setPosts(posts);
-            })
-    }, [type]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY >= 200) {
-                setShowGoToTop(true);
-                console.log("scrolling")
-            } else {
-                setShowGoToTop(false);
-            }
+        const handleResize = () => {
+            setDimensions((pre) => ({...pre, 'width':window.innerWidth}))
+            setDimensions((pre) => ({...pre, 'height':window.innerHeight}))
+            setDimensions((pre) => ({...pre, 'outerWidth':window.outerWidth}))
+            setDimensions((pre) => ({...pre, 'outerHeight':window.outerHeight}))
+            
+            
         }
-        window.addEventListener('scroll', handleScroll);
-        
-        // Cleanup funtion
+        window.addEventListener('resize', handleResize);
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-            // console.log("unmounting")
+            window.removeEventListener('resize', handleResize);
         }
     }, [])
     return (
         <div>
-            {tabs.map((tab) => (
-                <button
-                    key={tab}
-                    style={type === tab ? {
-                        color: '#fff',
-                        backgroundColor: '#333'
-                    } : {}}
-                    onClick={() => setType(tab)}
-                >{tab}</button>
-            ))}
-            <input
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-            />
-            <ul>
-                {posts.map((post, index) => {
-                    if (type === 'photos') {
-                        return <div>
-                            <img key={index} src={post.url} />
-                        </div>
-                    }
-                    else return <li key={index}>{post.title || post.body}</li>
-                }
-                )}
-            </ul>
-            {showGoToTop && (
-                <button
-                    style={{
-                        position: 'fixed',
-                        right: 20,
-                        bottom: 20
-                    }}
-                >
-                    Go to top
-                </button>
-            )}
+            <h1>The size of window</h1>
+            <h3>innerWidth: {dimensions.width}</h3>
+            <h3>innerHeight: {dimensions.height}</h3>
+            <h3>outerWidth: {dimensions.outerWidth}</h3>
+            <h3>outerHeight: {dimensions.outerHeight}</h3>
         </div>
     );
 };
