@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect ,useEffect, useState } from "react";
 /**
  * the examples for side effect
  * 
@@ -24,48 +24,36 @@ import { useEffect, useState } from "react";
 // 1) Callback luôn được gọi sau khi component mouted
 // 2) Cleanuo function luôn được gọi trước khi component unmounted
 
-const lessons = [
-    {
-        id: 1,
-        name: "ReactJS là gì? Tại sao nên học ReactJS?"
-    },
-    {
-        id: 2,
-        name: "SPA/MPA là gì?"
-    },
-    {
-        id: 3,
-        name: "Arrow function"
-    },
-]
+
+// useEffect
+// 1. Cập nhật lại state
+// 2. Cập nhật DOM (mutated)
+// 3. Render lại UI
+// 4. Gọi cleanup nếu deps thay đổi
+// 5. Gọi useEffect callback
+
+// useLayoutEffect
+// 1. Cập nhật lại state
+// 2. Cập nhật lại DOM (mutated)
+// 3. Gọi cleanup nếu deps thay đổi (sync)
+// 4. Gọi useLayoutEffect callback (sync)
+// 5. Render lại UI
 
 const Content = () => {
-    const [lessonId, setLessonId] = useState(1);
-    useEffect(() => {
-        const handleComment = (e) => {
-            console.log(e.detail);
-        }
-        window.addEventListener(`lesson-${lessonId}`, handleComment)
-        return () => {
-            window.removeEventListener(`lesson-${lessonId}`, handleComment)
+    const [count, setCount] = useState(0);
 
-        }
-    }, [lessonId])
+    useLayoutEffect(() => {
+        if (count > 3)
+            setCount(0);
+    }, [count])
+    
+    const handleRun = () => {
+        setCount(count + 1);
+    }
     return (
         <div>
-            <ul>
-                {lessons.map((lesson) => (
-                    <li
-                        key={lesson.id}
-                        style={{
-                            color: lessonId === lesson.id ? 'red' : '#333'
-                        }}
-                        onClick={() => setLessonId(lesson.id)}
-                    >
-                        {lesson.name}
-                    </li>
-                ))}
-            </ul>
+            <h1>{count}</h1>
+            <button onClick={handleRun}>Run</button>
         </div> 
     )
 };
