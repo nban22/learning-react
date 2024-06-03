@@ -25,21 +25,54 @@ import { useEffect, useState } from "react";
 // 2) Cleanuo function luôn được gọi trước khi component unmounted
 
 const Content = () => {
-    const [countDown, setCountDown] = useState(800);
-    let timer;
+    const [imgURL, setImgURL] = useState();
+    const [listImg, setListImg] = useState([]);
+    const handlePreviewPhoto = (e) => {
+        console.log(URL.createObjectURL(e.target.files[0]));
+        setImgURL(URL.createObjectURL(e.target.files[0]));
+        setListImg(()=> {
+            const length = e.target.files.length;
+            const listURL = [];
+            for (let i = 0; i < length; i++) {
+                listURL.push(URL.createObjectURL(e.target.files[i]));
+            }
+            console.log(listURL);
+            return listURL;
+        });
+    };
     useEffect(() => {
+        
+        return () => {
+            imgURL && URL.revokeObjectURL(imgURL);
+            
+        }
+    }, [imgURL, listImg]);
 
-        const timer = setInterval(()=>{
-            setCountDown(pre => pre - 1);
-        }, 1000);
-        return () => clearInterval(timer)
-    }, [])
+
+
     return (
         <div>
-            <h1>countDown Time</h1>
-            <h2>{countDown}</h2>
+            <h1>Chọn ảnh của bạn</h1>
+            <input
+                type="file"
+                multiple
+                id='inputTag'
+                onChange={(e) => handlePreviewPhoto(e)}
+            />
+            <img
+                src={imgURL}
+                style={{ width: `calc(100vw - 20px)`, objectFit: "contain" }}
+
+            ></img>
+            {listImg.map((img, index) => (
+                <img
+                    src={img}
+                    key={index}
+                    style={{ width: `calc(100vw - 20px)`, objectFit: "contain" }}
+                ></img>
+            ))}
         </div>
-    );
+    )
 };
 
 export default Content;
