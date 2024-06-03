@@ -24,54 +24,49 @@ import { useEffect, useState } from "react";
 // 1) Callback luôn được gọi sau khi component mouted
 // 2) Cleanuo function luôn được gọi trước khi component unmounted
 
+const lessons = [
+    {
+        id: 1,
+        name: "ReactJS là gì? Tại sao nên học ReactJS?"
+    },
+    {
+        id: 2,
+        name: "SPA/MPA là gì?"
+    },
+    {
+        id: 3,
+        name: "Arrow function"
+    },
+]
+
 const Content = () => {
-    const [imgURL, setImgURL] = useState();
-    const [listImg, setListImg] = useState([]);
-    const handlePreviewPhoto = (e) => {
-        console.log(URL.createObjectURL(e.target.files[0]));
-        setImgURL(URL.createObjectURL(e.target.files[0]));
-        setListImg(()=> {
-            const length = e.target.files.length;
-            const listURL = [];
-            for (let i = 0; i < length; i++) {
-                listURL.push(URL.createObjectURL(e.target.files[i]));
-            }
-            console.log(listURL);
-            return listURL;
-        });
-    };
+    const [lessonId, setLessonId] = useState(1);
     useEffect(() => {
-        
-        return () => {
-            imgURL && URL.revokeObjectURL(imgURL);
-            
+        const handleComment = (e) => {
+            console.log(e.detail);
         }
-    }, [imgURL, listImg]);
+        window.addEventListener(`lesson-${lessonId}`, handleComment)
+        return () => {
+            window.removeEventListener(`lesson-${lessonId}`, handleComment)
 
-
-
+        }
+    }, [lessonId])
     return (
         <div>
-            <h1>Chọn ảnh của bạn</h1>
-            <input
-                type="file"
-                multiple
-                id='inputTag'
-                onChange={(e) => handlePreviewPhoto(e)}
-            />
-            <img
-                src={imgURL}
-                style={{ width: `calc(100vw - 20px)`, objectFit: "contain" }}
-
-            ></img>
-            {listImg.map((img, index) => (
-                <img
-                    src={img}
-                    key={index}
-                    style={{ width: `calc(100vw - 20px)`, objectFit: "contain" }}
-                ></img>
-            ))}
-        </div>
+            <ul>
+                {lessons.map((lesson) => (
+                    <li
+                        key={lesson.id}
+                        style={{
+                            color: lessonId === lesson.id ? 'red' : '#333'
+                        }}
+                        onClick={() => setLessonId(lesson.id)}
+                    >
+                        {lesson.name}
+                    </li>
+                ))}
+            </ul>
+        </div> 
     )
 };
 
