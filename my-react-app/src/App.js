@@ -1,4 +1,4 @@
-import { useState, memo, useMemo, useRef } from 'react';
+import { useState, memo, useMemo, useRef, useReducer } from 'react';
 import Content from './Content'
 
 
@@ -21,50 +21,45 @@ const cssCenterTag = {
 // HOC
 // Render props
 
-const App = () => {
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState(0)
-  const [products, setProducts] = useState([])
-  // const [total, setTotal] = useState(0);
 
-  const nameRef = useRef();
+// useState
+// 1. Init State: 0
+// 2. Actions: up, down
 
-  const handleSubmit = () => {
-    setProducts([...products, {name, price: +price}]);
-    setName('');
-    setPrice('');
+// useReducer
+// 1. Init State: 0
+// 2. Actions: up, down
+// 3. Reducer
+// 4. Dispatch
+ 
+// Init state
+const initState = 0;
 
-    nameRef.current.focus();
+// Actions
+const UP_ACTION = 'up';
+const DOWN_ACTION = 'down';
+
+// Reducer
+const reducer = (state, action) => {
+  switch (action) {
+    case UP_ACTION:
+      return state + 1;
+    case DOWN_ACTION:
+      return state - 1;
+    default:
+      throw new Error('Invalid action')
   }
+}
 
-  const total = useMemo(() => products.reduce((result, prod) => result + prod.price, 0), [products])
-  
+const App = () => {
+  const [count, dispatch] = useReducer(reducer, initState);
+
   return (
     <div style={cssCenterTag}>
-      <input
-        ref={nameRef}
-        value={name}
-        placeholder='Enter name...'
-        onChange={e => setName(e.target.value)}
-      />
-      <br/>
-      <input 
-        value={price}
-        type='number'
-        placeholder='Enter price...'
-        onChange={e => setPrice(e.target.value)}
-      />
-      <br/>
-      <button onClick={handleSubmit}>Add</button>
-      <br/>
-      <h3>Total: {total}</h3>
-      <ul>
-        {products.map((product, index) => (
-          <li
-            key={index}
-          > {product.name} - {product.price}</li>
-        ))}
-      </ul>
+      <h1>{count}</h1>
+      <button onClick={() => {dispatch(DOWN_ACTION)}}>Down</button>   
+      <button onClick={() => {dispatch("UP_ACTION")}}>Up</button>   
+
     </div>
   )
 }
