@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, memo } from 'react';
 import Content from './Content'
-
+import Temp from './Temp'
 
 
 const cssCenterTag = {
@@ -15,33 +15,25 @@ const cssCenterTag = {
 // Lưu các giá trị qua một tham chiếu bên ngoài
 // function component
 
+// 1. memo() -> Higer Order Component (HOC)
+// 2. useCallback()
+
+// Hooks
+// HOC
+// Render props
+
 const App = () => {
-  const [count, setCount] = useState(60);
-  const timerId = useRef()
-  const preCount = useRef()
+  const [count, SetCount] = useState(0)
 
-  useEffect(() => {
-    preCount.current = count;
-  }, [count]);
-
-  const handleStart = () => {
-    timerId.current = setInterval(() => {
-      setCount(count => count - 1);
-    }, 1000);
+  const increase = () => {
+    SetCount(count + 1);
   }
-
-
-  const handleStop = () => {
-    clearInterval(timerId.current);
-  }
-
-  console.log(count, preCount.current);
 
   return (
     <div >
       <h1>{count}</h1>
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
+      <button onClick={increase}>Click me</button>
+      <Temp count = {count}/>
     </div>
   )
 }
