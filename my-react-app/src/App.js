@@ -1,6 +1,5 @@
-import { useState, memo } from 'react';
+import { useState, memo, useMemo, useRef } from 'react';
 import Content from './Content'
-import Temp from './Temp'
 
 
 const cssCenterTag = {
@@ -23,17 +22,49 @@ const cssCenterTag = {
 // Render props
 
 const App = () => {
-  const [count, SetCount] = useState(0)
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState(0)
+  const [products, setProducts] = useState([])
+  // const [total, setTotal] = useState(0);
 
-  const increase = () => {
-    SetCount(count + 1);
+  const nameRef = useRef();
+
+  const handleSubmit = () => {
+    setProducts([...products, {name, price: +price}]);
+    setName('');
+    setPrice('');
+
+    nameRef.current.focus();
   }
 
+  const total = useMemo(() => products.reduce((result, prod) => result + prod.price, 0), [products])
+  
   return (
-    <div >
-      <h1>{count}</h1>
-      <button onClick={increase}>Click me</button>
-      <Temp count = {count}/>
+    <div style={cssCenterTag}>
+      <input
+        ref={nameRef}
+        value={name}
+        placeholder='Enter name...'
+        onChange={e => setName(e.target.value)}
+      />
+      <br/>
+      <input 
+        value={price}
+        type='number'
+        placeholder='Enter price...'
+        onChange={e => setPrice(e.target.value)}
+      />
+      <br/>
+      <button onClick={handleSubmit}>Add</button>
+      <br/>
+      <h3>Total: {total}</h3>
+      <ul>
+        {products.map((product, index) => (
+          <li
+            key={index}
+          > {product.name} - {product.price}</li>
+        ))}
+      </ul>
     </div>
   )
 }
