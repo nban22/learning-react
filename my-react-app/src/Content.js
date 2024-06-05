@@ -1,4 +1,4 @@
-import { useLayoutEffect ,useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 /**
  * the examples for side effect
  * 
